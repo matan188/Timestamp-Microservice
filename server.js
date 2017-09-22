@@ -51,26 +51,26 @@ app.get('/:date', function(req, res) {
   var inputArray = input.split(' ');
   if (inputArray.length === 1) { // Epoch to Natural
     var epochString = inputArray[0];
-    var epoch = new Date(Number(epochString));
+    var epoch = new Date(Number(epochString) * 1000);
     if (isNaN(epoch)) {
-      output = {natural: null, epoch: null};
+      output = {natural: null, unix: null};
     } else {
       var year = epoch.getFullYear();
       var month = epoch.getMonth();
-      var day = epoch.getDate() - 1;
+      var day = epoch.getDate();
       console.log(epoch, day, month, year);
       output.natural = `${months[month]} ${day}, ${year}`; 
-      output.epoch = epochString;
+      output.unix = parseInt(epochString);
     }
   } else if (inputArray.length === 3) { // Natural to Epoch
     var [month, day, year] = inputArray;
     day = day.split(',')[0];
-    var date = new Date(parseInt(year)+1, months.indexOf(month), parseInt(day)+1);
+    var date = new Date(parseInt(year), months.indexOf(month), parseInt(day));
     if (isNaN(date)) {
-      output = {natural: null, epoch: null};      
+      output = {natural: null, unix: null};      
     } else {
-      output.epoch = date.getTime().toString();
       output.natural = `${month} ${day}, ${year}`;
+      output.unix = date / 1000;
     }
   }
   res.send(output);
