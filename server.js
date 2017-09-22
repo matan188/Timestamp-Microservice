@@ -36,7 +36,46 @@ app.route('/_api/package.json')
 app.route('/')
     .get(function(req, res) {
 		  res.sendFile(process.cwd() + '/views/index.html');
-    })
+});
+
+// Intercept /favicon.ico request
+app.get('/favicon.ico', function(req, res) {
+  res.status(204);
+});
+
+app.get('/:date', function(req, res) {
+  var input = decodeURI(req.params.date);
+  var output = {};
+  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
+  'September', 'October', 'November', 'December'];
+  var inputArray = input.split(' ');
+  if (inputArray.length === 1) { // Epoch to Natural
+    var epochString = inputArray[0];
+    var epoch = new Date(Number(epochString));
+    if (isNaN(epoch)) {
+      output = {natural: null, epoch: null};
+    } else {
+      var year = epoch.getFullYear();
+      var month = epoch.getMonth();
+      var day = epoch.getDate() - 1;
+      console.log(epoch, day, month, year);
+      output.natural = `${months[month]} ${day}, ${year}`; 
+      output.epoch = epochString;
+    }
+  } else if (inputArray.length === 3) { // Natural to Epoch
+    var [month, day, year] = inputArray;
+    day = day.split(',')[0];
+    var date = new Date(parseInt(year)+1, months.indexOf(month), parseInt(day)+1);
+    if (isNaN(date)) {
+      output = {natural: null, epoch: null};      
+    } else {
+      output.epoch = date.getTime().toString();
+      output.natural = `${month} ${day}, ${year}`;
+    }
+  }
+  res.send(output);
+  res.end();
+});
 
 // Respond not found to all the wrong routes
 app.use(function(req, res, next){
@@ -51,9 +90,9 @@ app.use(function(err, req, res, next) {
       .type('txt')
       .send(err.message || 'SERVER ERROR');
   }  
-})
+});
 
-app.listen(process.env.PORT, function () {
+app.listen(3000, function () {
   console.log('Node.js listening ...');
 });
 
