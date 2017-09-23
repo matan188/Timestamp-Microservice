@@ -11,7 +11,7 @@ var getDateFromInput = function (input) {
         }
     } else if (set.size === 1) { // unix
         for (let item of set.values()) inputDate.unix = parseInt(item);
-        
+
     } else { // invalid
         return null;
     }
@@ -23,8 +23,8 @@ var getDateFromInput = function (input) {
 
 
 // MONTHS FUNCTIONS
-var months = (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
-'September', 'October', 'November', 'December']);
+var months = (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December']);
 
 var getMonthNumber = (month) => {
     var lowerMonths = months.map((monthName) => monthName.toLowerCase());
@@ -40,18 +40,33 @@ var getMonthName = (monthNumber) => {
 var epochToJson = (inputDate) => {
     var epoch = new Date(inputDate.unix * 1000);
     if (isNaN(epoch)) {
-    
-      return {natural: null, unix: null};
+
+        return { natural: null, unix: null };
     } else {
-    
-      var year = epoch.getFullYear();
-      var month = epoch.getMonth();
-      var day = epoch.getDate();
-    
-      return {
-        natural: `${getMonthName(month)} ${day}, ${year}`,
-        unix: inputDate.unix
-      };
+
+        var year = epoch.getFullYear();
+        var month = epoch.getMonth();
+        var day = epoch.getDate();
+
+        return {
+            natural: `${getMonthName(month)} ${day}, ${year}`,
+            unix: inputDate.unix
+        };
+    }
+};
+
+var naturalToJson = (inputDate) => {
+    var date = new Date(parseInt(inputDate.year),
+        getMonthNumber(inputDate.month),
+        parseInt(inputDate.day));
+
+    if (isNaN(date)) {
+        return { natural: null, unix: null };
+    } else {
+        return {
+            natural: `${inputDate.month} ${inputDate.day}, ${inputDate.year}`,
+            unix: date / 1000
+        };
     }
 };
 
@@ -59,5 +74,6 @@ module.exports = {
     getDateFromInput,
     getMonthNumber,
     getMonthName,
-    epochToJson
+    epochToJson,
+    naturalToJson
 }
