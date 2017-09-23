@@ -50,16 +50,7 @@ app.get('/:date', function(req, res) {
   console.log(inputDate);
 
   if ('unix' in inputDate) { // Epoch to Natural
-    var epoch = new Date(inputDate.unix * 1000);
-    if (isNaN(epoch)) {
-      output = {natural: null, unix: null};
-    } else {
-      var year = epoch.getFullYear();
-      var month = epoch.getMonth();
-      var day = epoch.getDate();
-      output.natural = `${ts.getMonthName(month)} ${day}, ${year}`; 
-      output.unix = inputDate.unix;
-    }
+    res.send(ts.epochToJson(inputDate));
   } else if ('day' in inputDate && 'year' in inputDate && 'month' in inputDate) { // Natural to Epoch
     var date = new Date(parseInt(inputDate.year), 
                         ts.getMonthNumber(inputDate.month), 
@@ -71,8 +62,6 @@ app.get('/:date', function(req, res) {
       output.unix = date / 1000;
     }
   }
-  
-  res.send(output);
   res.end();
 });
 

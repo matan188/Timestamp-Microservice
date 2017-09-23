@@ -1,3 +1,4 @@
+// PARSE INPUT FUNCTIONS
 var getDateFromInput = function (input) {
     var set = new Set(input.split(' ').map((el) => el.replace(',', '')));
     var inputDate = {};
@@ -18,6 +19,10 @@ var getDateFromInput = function (input) {
     return inputDate;
 };
 
+
+
+
+// MONTHS FUNCTIONS
 var months = (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
 'September', 'October', 'November', 'December']);
 
@@ -31,8 +36,28 @@ var getMonthName = (monthNumber) => {
     return months[monthNumber];
 };
 
+// JSON DATE OBJECT
+var epochToJson = (inputDate) => {
+    var epoch = new Date(inputDate.unix * 1000);
+    if (isNaN(epoch)) {
+    
+      return {natural: null, unix: null};
+    } else {
+    
+      var year = epoch.getFullYear();
+      var month = epoch.getMonth();
+      var day = epoch.getDate();
+    
+      return {
+        natural: `${getMonthName(month)} ${day}, ${year}`,
+        unix: inputDate.unix
+      };
+    }
+};
+
 module.exports = {
     getDateFromInput,
     getMonthNumber,
-    getMonthName
+    getMonthName,
+    epochToJson
 }
