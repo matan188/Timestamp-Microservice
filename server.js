@@ -8,6 +8,7 @@
 var fs = require('fs');
 var express = require('express');
 var app = express();
+var ts = require('./timestamp');
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
@@ -44,8 +45,8 @@ app.get('/favicon.ico', function(req, res) {
 });
 
 app.get('/:date', function(req, res) {
-  var input = decodeURI(req.params.date);
-  var output = {};
+  var inputDate = ts.getDateFromInput(decodeURI(req.params.date));
+  console.log(inputDate);
   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
   'September', 'October', 'November', 'December'];
   var inputArray = input.split(' ');
