@@ -53,6 +53,8 @@ app.get('/:date', function(req, res) {
     res.send(ts.epochToJson(inputDate));
   } else if ('day' in inputDate && 'year' in inputDate && 'month' in inputDate) { // Natural to Epoch
     res.send(ts.naturalToJson(inputDate));
+  } else {
+    res.send({natural: null, unix: null});
   }
   res.end();
 });
