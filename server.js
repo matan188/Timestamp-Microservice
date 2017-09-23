@@ -46,34 +46,32 @@ app.get('/favicon.ico', function(req, res) {
 
 app.get('/:date', function(req, res) {
   var inputDate = ts.getDateFromInput(decodeURI(req.params.date));
+  var output = {};
   console.log(inputDate);
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
-  'September', 'October', 'November', 'December'];
-  var inputArray = input.split(' ');
-  if (inputArray.length === 1) { // Epoch to Natural
-    var epochString = inputArray[0];
-    var epoch = new Date(Number(epochString) * 1000);
+
+  if ('unix' in inputDate) { // Epoch to Natural
+    var epoch = new Date(inputDate.unix * 1000);
     if (isNaN(epoch)) {
       output = {natural: null, unix: null};
     } else {
       var year = epoch.getFullYear();
       var month = epoch.getMonth();
       var day = epoch.getDate();
-      console.log(epoch, day, month, year);
-      output.natural = `${months[month]} ${day}, ${year}`; 
-      output.unix = parseInt(epochString);
+      output.natural = `${ts.getMonthName(month)} ${day}, ${year}`; 
+      output.unix = inputDate.unix;
     }
-  } else if (inputArray.length === 3) { // Natural to Epoch
-    var [month, day, year] = inputArray;
-    day = day.split(',')[0];
-    var date = new Date(parseInt(year), months.indexOf(month), parseInt(day));
+  } else if ('day' in inputDate && 'year' in inputDate && 'month' in inputDate) { // Natural to Epoch
+    var date = new Date(parseInt(inputDate.year), 
+                        ts.getMonthNumber(inputDate.month), 
+                        parseInt(inputDate.day));
     if (isNaN(date)) {
       output = {natural: null, unix: null};      
     } else {
-      output.natural = `${month} ${day}, ${year}`;
+      output.natural = `${inputDate.month} ${inputDate.day}, ${inputDate.year}`;
       output.unix = date / 1000;
     }
   }
+  
   res.send(output);
   res.end();
 });

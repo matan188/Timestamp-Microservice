@@ -15,7 +15,6 @@ var getDateFromInput = function (input) {
         return null;
     }
 
-    console.log("end");
     return inputDate;
 };
 
