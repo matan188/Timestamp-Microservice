@@ -71,9 +71,9 @@ var getTimestamp = (dateString) => {
     var inputDate = getDateFromInput(decodeURI(dateString));
 
     if ('unix' in inputDate) { // Epoch to Natural
-        return ts.epochToJson(inputDate);
+        return epochToJson(inputDate);
     } else if ('day' in inputDate && 'year' in inputDate && 'month' in inputDate) { // Natural to Epoch
-        return ts.naturalToJson(inputDate);
+        return naturalToJson(inputDate);
     }
 
     return {
