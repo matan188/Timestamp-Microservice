@@ -56,12 +56,15 @@ var naturalToJson = (inputDate) => {
     var date = new Date(parseInt(inputDate.year),
         getMonthNumber(inputDate.month),
         parseInt(inputDate.day));
-
+    
     if (isNaN(date)) {
         return { natural: null, unix: null };
     } else {
+        //capitalize first letter
+        var month = getMonthName(getMonthNumber(inputDate.month)); 
+
         return {
-            natural: `${inputDate.month} ${inputDate.day}, ${inputDate.year}`,
+            natural: `${month} ${inputDate.day}, ${inputDate.year}`,
             unix: date / 1000
         };
     }
