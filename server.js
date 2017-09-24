@@ -45,17 +45,8 @@ app.get('/favicon.ico', function(req, res) {
 });
 
 app.get('/:date', function(req, res) {
-  var inputDate = ts.getDateFromInput(decodeURI(req.params.date));
-  var output = {};
-  console.log(inputDate);
-
-  if ('unix' in inputDate) { // Epoch to Natural
-    res.send(ts.epochToJson(inputDate));
-  } else if ('day' in inputDate && 'year' in inputDate && 'month' in inputDate) { // Natural to Epoch
-    res.send(ts.naturalToJson(inputDate));
-  } else {
-    res.send({natural: null, unix: null});
-  }
+  var jsonDate = ts.getTimestamp(req.params.date);
+  res.send(jsonDate);
   res.end();
 });
 

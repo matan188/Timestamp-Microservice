@@ -19,9 +19,6 @@ var getDateFromInput = function (input) {
     return inputDate;
 };
 
-
-
-
 // MONTHS FUNCTIONS
 var months = (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December']);
@@ -70,10 +67,26 @@ var naturalToJson = (inputDate) => {
     }
 };
 
+var getTimestamp = (dateString) => {
+    var inputDate = getDateFromInput(decodeURI(dateString));
+
+    if ('unix' in inputDate) { // Epoch to Natural
+        return ts.epochToJson(inputDate);
+    } else if ('day' in inputDate && 'year' in inputDate && 'month' in inputDate) { // Natural to Epoch
+        return ts.naturalToJson(inputDate);
+    }
+
+    return {
+        natural: null,
+        unix: null
+    };
+}
+
 module.exports = {
     getDateFromInput,
     getMonthNumber,
     getMonthName,
     epochToJson,
-    naturalToJson
+    naturalToJson,
+    getTimestamp
 }
